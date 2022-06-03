@@ -42,7 +42,7 @@ CREATE TABLE Contractor (
 GO
 CREATE TABLE ContractSkill (
                 ContractorId INT NOT NULL,
-                SkillTitle NVARCHAR(30) NOT NULL,
+                SkillTitle NVARCHAR(30) NOT NULL
                 CONSTRAINT ContractSkill_pk PRIMARY KEY (ContractorId, SkillTitle)
 )
 GO
@@ -76,7 +76,6 @@ CREATE TABLE [Location] (
                 Suburb NVARCHAR(30) NOT NULL,
                 [State] NVARCHAR(3) NOT NULL,
                 Zip NCHAR(4) NOT NULL,
-                Phone NCHAR(10) NOT NULL,
                 CONSTRAINT Location_pk PRIMARY KEY (Region, ClientId)
 )
 GO
@@ -84,7 +83,7 @@ CREATE TABLE Job (
                 JobId INT IDENTITY NOT NULL,
                 ClientId INT NOT NULL,
                 RequestedStartDate DATE NOT NULL,
-                RequestedCompletionDate DATE NOT NULL,
+                RequestedCompletionDate DATE ,
                 [Priority] NVARCHAR(10) NOT NULL,
                 [Description] NVARCHAR(300) NOT NULL,
                 HoursOnJob DECIMAL(4,2),
@@ -133,19 +132,19 @@ ALTER TABLE Location ADD CONSTRAINT Region_Location_fk
 FOREIGN KEY (Region)
 REFERENCES Region (Region)
 ON DELETE NO ACTION
-ON UPDATE NO ACTION
+ON UPDATE CASCADE
 
 ALTER TABLE Job ADD CONSTRAINT Skill_Job_fk
 FOREIGN KEY (SkillTitle)
 REFERENCES Skill (SkillTitle)
 ON DELETE NO ACTION
-ON UPDATE NO ACTION
+ON UPDATE CASCADE
 
 ALTER TABLE ContractSkill ADD CONSTRAINT SkillContract_Skill_fk
 FOREIGN KEY (SkillTitle)
 REFERENCES Skill (SkillTitle)
 ON DELETE NO ACTION
-ON UPDATE NO ACTION
+ON UPDATE CASCADE
 
 ALTER TABLE RejectedJob ADD CONSTRAINT Contractor_RejectedJob_fk
 FOREIGN KEY (ContractorId)
@@ -163,13 +162,13 @@ ALTER TABLE ContractSkill ADD CONSTRAINT Contractor_Skill_fk
 FOREIGN KEY (ContractorId)
 REFERENCES Contractor (ContractorId)
 ON DELETE NO ACTION
-ON UPDATE NO ACTION
+ON UPDATE CASCADE
 
 ALTER TABLE Job ADD CONSTRAINT Contractor_Job_fk
 FOREIGN KEY (ContractorId)
 REFERENCES Contractor (ContractorId)
 ON DELETE NO ACTION
-ON UPDATE NO ACTION
+ON UPDATE CASCADE
 
 ALTER TABLE Job ADD CONSTRAINT Status_Job_fk
 FOREIGN KEY ([Status])
@@ -181,13 +180,13 @@ ALTER TABLE Job ADD CONSTRAINT Client_Job_fk
 FOREIGN KEY (ClientId)
 REFERENCES Client (ClientId)
 ON DELETE NO ACTION
-ON UPDATE NO ACTION
+ON UPDATE CASCADE
 
 ALTER TABLE Location ADD CONSTRAINT Client_Location_fk
 FOREIGN KEY (ClientId)
 REFERENCES Client (ClientId)
 ON DELETE NO ACTION
-ON UPDATE NO ACTION
+ON UPDATE CASCADE
 
 ALTER TABLE Job ADD CONSTRAINT Location_Job_fk
 FOREIGN KEY (Region, ClientId)
@@ -306,15 +305,15 @@ INSERT INTO Client(OrganisationName,FirstName,LastName,Phone,Email,[Password],Ac
 ('Cyber Security Solutions','Tim','Secure','0477777777','TimSecure@Cyber.com','TimSecure','Active')
 GO
 -- ====================================================================================================================
-INSERT INTO [Location](ClientId, Region,Street, Suburb,[State],Zip,Phone) VALUES
+INSERT INTO [Location](ClientId, Region,Street, Suburb,[State],Zip) VALUES
 -- North Sydney
-(1,'North Sydney','13 Talavera Rd','Macquarie Park','NSW','2113','98806000'),
+(1,'North Sydney','13 Talavera Rd','Macquarie Park','NSW','2113'),
 -- South Sydney
-(3,'South Sydney','17 Cawarra Rd','Caringbah','NSW','2011','90001234'),
+(3,'South Sydney','17 Cawarra Rd','Caringbah','NSW','2011'),
 -- East Sydney
-(2,'Eastern Sydney','76 Smith Street','Mascot','NSW','2011','96606510'),
+(2,'Eastern Sydney','76 Smith Street','Mascot','NSW','2011'),
 -- West Sydney
-(4,'Western Sydney','107 Cobb Avenue','Jamisontown','NSW','2750','93501100')
+(4,'Western Sydney','107 Cobb Avenue','Jamisontown','NSW','2750')
 GO
 -- ====================================================================================================================
 SET IDENTITY_INSERT dbo.[Job] ON;
